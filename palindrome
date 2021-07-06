@@ -1,5 +1,7 @@
+# Finding length of longest palindrome in the table(100X100)
+
 import sys
-sys.stdin = open("palindromeinput.txt", "r")
+sys.stdin = open("palindrome_input.txt", "r")
 
 def find_max_L_p(A):
   A_tr = [''.join(x) for x in zip(*A)]
@@ -10,12 +12,11 @@ def find_max_L_p(A):
     for i in range(L_A):
       for j in range(L_A - L_p + 1):
         
-        for k in range(L_p//2):
+        for k in range(L_p//2): # Original table
           if A[i][j+k] != A[i][j+L_p-1-k]:
             break
           if k == L_p//2 - 1: is_p = 1
-
-        for k in range(L_p//2):
+        for k in range(L_p//2): # Transposed table
           if A_tr[i][j+k] != A_tr[i][j+L_p-1-k]:
             break
           if k == L_p//2 - 1: is_p = 1
