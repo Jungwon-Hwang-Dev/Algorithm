@@ -1,0 +1,37 @@
+import sys
+sys.stdin = open("input (1).txt", "r")
+
+def find_max_L_p(A):
+  A_tr = [''.join(x) for x in zip(*A)]
+  L_A = len(A)
+  L_p = len(A)
+  is_p = 0
+  while L_p > 1:
+    for i in range(L_A):
+      for j in range(L_A - L_p + 1):
+        
+        for k in range(L_p//2):
+          if A[i][j+k] != A[i][j+L_p-1-k]:
+            break
+          if k == L_p//2 - 1: is_p = 1
+
+        for k in range(L_p//2):
+          if A_tr[i][j+k] != A_tr[i][j+L_p-1-k]:
+            break
+          if k == L_p//2 - 1: is_p = 1
+
+        
+        if is_p == 1:
+          return L_p    
+        
+    L_p += -1
+  return L_p
+
+T = 10
+L = 100
+
+for _ in range(T):
+  N_case = int(input())
+  A = [input() for i in range(L)]
+  L_p_longest = find_max_L_p(A)
+  print('#{} {}'.format(N_case,L_p_longest))
