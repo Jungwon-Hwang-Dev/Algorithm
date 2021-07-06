@@ -1,5 +1,5 @@
 import sys
-sys.stdin = open("input (1).txt", "r")
+sys.stdin = open("palindromeinput.txt", "r")
 
 def find_max_L_p(A):
   A_tr = [''.join(x) for x in zip(*A)]
