@@ -7,17 +7,15 @@ for case in range(1, T+1):
     N, M, K, A, B = map(int, input().split(' '))
     # of Reception(N) / Repair(M) / Customer(K) // Desk # Rec(A) / Rep(B)
     an = list(map(int, input().split(' ')))
-    bn = list(map(int, input().split(' ')))
+    bm = list(map(int, input().split(' ')))
     tn = list(map(int, input().split(' ')))
 
     t = 0
-    Customers = [i for i in range(1,K+1)]
+    c = 1
     Reception_waiting = []
-    Reception_list = [0 for _ in range(N)]
-    Reception_time = [0 for _ in range(N)]
+    Receptions = [[0, 0] for _ in range(N)] # [id, time_enter]
     Repair_waiting = []
-    Repair_list = [0 for _ in range(M)]
-    Repair_time = [0 for _ in range(M)]
+    Repairs = [[0,0] for _ in range(M)] # [id, time_enter]
     cnt_done = 0
 
     Reception_A_history = []
@@ -25,47 +23,38 @@ for case in range(1, T+1):
 
     while(cnt_done < K):
         # Repair list reset
-        for n in range(M):
-            if Repair_list[n] != 0:
-                Repair_time[n] += 1
-            if Repair_time[n] == bn[n]:
-                Repair_list[n] = 0
-                Repair_time[n] = 0
+        for m in range(M):
+            if (Repairs[m][0] != 0) and (Repairs[m][1] == t - bm[m]):
+                Repairs[m] = [0, 0] # reset
                 cnt_done += 1
 
         # Reception list reset
         for n in range(N):
-            if Reception_list[n] != 0:
-                Reception_time[n] += 1
-            if Reception_time[n] == an[n]:
-                Repair_waiting.append(Reception_list[n])
-                Reception_time[n] = 0
-                Reception_list[n] = 0
-
+            if (Receptions[n][0] != 0) and (Receptions[n][1] == t - an[n]):
+                Repair_waiting.append(Receptions[n][0])
+                Receptions[n] = [0, 0]
 
         # Customers reset
-        for n1 in range(len(Customers)):
+        for i in range(len(tn)):
             if tn[0] == t:
-                Reception_waiting.append(Customers.pop(0))
+                Reception_waiting.append(c)
                 del tn[0]
+                c += 1
             else: break
 
-
         # Reception waiting reset
-        for n2 in range(len(Reception_waiting)):
-            for n_Reception in range(N):
-                if (Reception_list[n_Reception] == 0) & (len(Reception_waiting) != 0):
-                    Reception_list[n_Reception] = Reception_waiting.pop(0)
-                    if (n_Reception + 1) == A:
-                        Reception_A_history.append(Reception_list[n_Reception])
+        for n in range(N):
+            if (Receptions[n] == [0, 0]) and Reception_waiting:
+                Receptions[n] = [Reception_waiting.pop(0), t]
+                if (n + 1) == A:
+                    Reception_A_history.append(Receptions[n][0])
 
         # Repair waiting reset
-        for n3 in range(len(Repair_waiting)):
-            for n_Repair in range(M):
-                if (Repair_list[n_Repair] == 0) & (len(Repair_waiting) != 0):
-                    Repair_list[n_Repair] = Repair_waiting.pop(0)
-                    if (n_Repair + 1) == B:
-                        Repair_B_history.append(Repair_list[n_Repair])
+        for m in range(M):
+            if (Repairs[m] == [0, 0]) and Repair_waiting:
+                Repairs[m] = [Repair_waiting.pop(0), t]
+                if (m + 1) == B:
+                    Repair_B_history.append(Repairs[m][0])
         t += 1
 
     answer = sum(set(Reception_A_history) & set(Repair_B_history))
@@ -73,4 +62,3 @@ for case in range(1, T+1):
         answer = -1
 
     print('#{} {}'.format(case, answer))
-
