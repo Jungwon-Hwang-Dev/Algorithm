@@ -1,0 +1,99 @@
+import sys
+sys.stdin = open("repai_shop_input.txt", "r")
+# reference : dake94
+class customer():
+    def __init__(self, customer_id, customer_time):
+        self.customer_id = customer_id
+        self.customer_time = customer_time
+        self.state = 0
+
+    def set_id_1(self, id_1):
+        self.id_1 = id_1
+
+    def set_id_2(self, id_2):
+        self.id_2 = id_2
+
+class reception():
+    def __init__(self, reception_id, reception_time):
+        self.reception_id = reception_id
+        self.reception_time = reception_time
+        self.state = 0
+
+    def set_done_time(self, done_time):
+        self.done_time = done_time
+
+    def set_customer(self, customer):
+        self.customer = customer
+
+class repair():
+    def __init__(self, repair_id, repair_time):
+        self.repair_id = repair_id
+        self.repair_time = repair_time
+        self.state = 0
+
+    def set_done_time(self, done_time):
+        self.done_time = done_time
+
+    def set_customer(self, customer):
+        self.customer = customer
+
+for case_num in range(1, int(input()) + 1):
+    reception_n, repair_n, customer_n, want_reception, want_repair = map(int, input().split(' '))
+    reception_processing_time = list(map(int, input().split(' ')))
+    repair_processing_time = list(map(int, input().split(' ')))
+    customer_time = list(map(int, input().split(' ')))
+
+    customer_list = [customer(idx+1, customer_time[idx]) for idx in range(customer_n)]
+    customer_done = []
+    reception_list = [reception(idx+1, reception_processing_time[idx]) for idx in range(reception_n)]
+    reception_waiting = []
+    repair_list = [repair(idx+1, repair_processing_time[idx]) for idx in range(repair_n)]
+    repair_waiting = []
+
+    time_start = customer_time[0]
+    t = time_start
+    cnt_done = 0
+    answer = 0
+
+    while cnt_done < customer_n:
+        while customer_list and customer_list[0].customer_time == t:
+            reception_waiting.append(customer_list.pop(0))
+
+        for n in reception_list:
+            if (n.state == 1) and (n.done_time == t):
+                c = n.customer
+                n.state = 0
+                repair_waiting.append(c)
+
+            if (n.state == 0) and reception_waiting:
+                c = reception_waiting.pop(0)
+                c.set_id_1(n.reception_id)
+                n.state = 1
+                n.set_done_time(t + n.reception_time)
+                n.set_customer(c)
+
+        for m in repair_list:
+            if (m.state == 1) and (m.done_time == t):
+                c = m.customer
+                m.state = 0
+                c.state = 1
+                cnt_done += 1
+                customer_done.append(c)
+
+            if (m.state == 0) and repair_waiting:
+                c = repair_waiting.pop(0)
+                c.set_id_2(m.repair_id)
+                m.state = 1
+                m.set_done_time(t + m.repair_time)
+                m.set_customer(c)
+
+        t += 1
+
+    for c in customer_done:
+        if (c.id_1 == want_reception) and (c.id_2 == want_repair):
+            answer += c.customer_id
+
+    if not answer:
+        answer = -1
+
+    print('#{} {}'.format(case_num, answer))
