@@ -1,0 +1,43 @@
+import sys
+sys.stdin = open("str_dividing_input.txt", "r")
+
+
+def find_max_K(s):
+    s_list = []
+    l_s = len(s)
+    p = 0
+    if l_s == 1: return 1
+    elif l_s == 2:
+        if s[0] == s[1]: return 1
+        else: return 2
+    else:
+        while (p != -1):
+            if p + 2 == l_s:
+                if s[p] != s[p+1]:
+                    s_list.append(s[p])
+                    s_list.append(s[p+1])
+                    p = -1
+                elif s[p] == s[p+1]:
+                    s_list.append(s[p:p+2])
+                    if s_list[-1] == s_list[-2]:
+                        s_list[-2] = s[p]*3
+                        s_list[-1] = s[p]
+                    p = -1
+
+            elif s[p] != s[p + 1]:
+                s_list.append(s[p])
+                p += 1
+
+            else:
+                s_list.append(s[p])
+                s_list.append(s[p+1:p+3])
+                p += 3
+
+    K = len(s_list)
+    return K
+
+T = int(input())
+for case in range(1, T+1):
+    s = input()
+    K = find_max_K(s)
+    print('#{} {}'.format(case, K))
