@@ -1,0 +1,16 @@
+import sys
+sys.stdin = open("GNS_test_input.txt", "r")
+
+for _ in range(1, 1 + int(input())):
+    tc, n = map(str, input().split())
+    numbers_dict = dict(zip(['ZRO','ONE','TWO','THR','FOR','FIV','SIX','SVN','EGT','NIN'], [0]*10))
+    for num in (input().split()):
+        numbers_dict[num] += 1
+
+    ans = ''
+    for key, val in numbers_dict.items():
+        ans += (key + ' ') * val
+
+    print(tc + ' ' + ans[:-1])
+
+
