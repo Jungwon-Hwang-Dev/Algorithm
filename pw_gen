@@ -1,0 +1,19 @@
+for _ in range(10):
+    tc = int(input())
+    pw = list(int(num) for num in input().split())
+
+    cnt = 0
+    idx = 0
+    while (pw[idx] > 0):
+        idx = cnt % 8
+        dec = (cnt % 5) + 1
+        pw[idx] -= dec
+        cnt += 1
+
+    pw[idx] = 0
+    ans = [0]*8
+    for i in range(8):
+        ans[7-i] = pw[idx]
+        idx += -1
+
+    print('#{} {}'.format(tc, ' '.join(str(n) for n in ans)))
