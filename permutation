@@ -1,0 +1,48 @@
+
+# on my own - return all the permutation
+def permutation_jw(arr):
+    result = [arr[:]]
+
+    # recursion until last 2 elements
+    if len(arr) == 1:
+        return result
+    elif len(arr) == 2:
+        arr[0], arr[1] = arr[1], arr[0]
+        result.append(arr[:])
+        arr[0], arr[1] = arr[1], arr[0]
+        return result
+
+    # fixed num(1) + permutation(n-1)
+    for i in range(len(arr)):
+        for j in permutation_1(arr[0:i] + arr[i + 1:len(arr)]):
+            result.append([arr[i]]+j)
+    
+    del result[0] # delete duplication(input arr)
+    return result
+
+
+
+
+# reference_1
+def permutation_1(arr, r):  # r : number to use(r of nPr)
+    used = [0 for _ in range(len(arr))]  # for checking used element in arr
+    result = []
+
+    def generate(ordered, used):
+        if len(ordered) == r:  # return the answer
+            result.append(ordered[:]) # ****** not to use the &ordered , use ordered[:] !!!
+            return
+        for i in range(len(arr)):
+            if not used[i]:
+                ordered.append(arr[i])
+                used[i] = 1
+                generate(ordered, used)  # recursion
+                used[i] = 0
+                ordered.pop()
+        return result
+    result = generate([], used)
+    return result
+
+
+
+
