@@ -4,14 +4,14 @@ def permutation_jw(arr):
     result = [arr[:]]
 
     # recursion until last 2 elements
-    if len(arr) == 1:
-        return result
-    elif len(arr) == 2:
+    if len(arr) == 2:
         arr[0], arr[1] = arr[1], arr[0]
         result.append(arr[:])
         arr[0], arr[1] = arr[1], arr[0]
         return result
-
+    elif len(arr) == 1:
+        return result
+    
     # fixed num(1) + permutation(n-1)
     for i in range(len(arr)):
         for j in permutation_1(arr[0:i] + arr[i + 1:len(arr)]):
