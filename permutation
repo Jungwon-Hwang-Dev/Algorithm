@@ -21,6 +21,24 @@ def permutation_jw(arr):
     return result
 
 
+# dynamic programming_ on my own
+p_dynamic = {1:[[0]], 2:[[0,1], [1,0]], 3:[[0, 1, 2], [0, 2, 1], [1, 0, 2], [1, 2, 0], [2, 0, 1], [2, 1, 0]]}
+def permutation_memoization(n):
+    if n in p_dynamic:
+        return p_dynamic[n]
+
+    if n-1 not in p_dynamic:
+        permutation_memoization(n-1)
+
+    tmp = []
+    for p in p_dynamic[n-1]:
+        for k in range(len(p) + 1):
+            tmp_2 = p[:]
+            tmp_2.insert(k, n-1)
+            tmp.append(tmp_2)
+    p_dynamic[n] = tmp[:]
+    return tmp
+
 
 
 # reference_1
