@@ -1,0 +1,87 @@
+def check_dir(p, arr):
+    dir_list = [0, 1, 2, 3, 4]
+    N = len(arr)
+    for i in range(0, p[0]):
+        if arr[i][p[1]] != 0:
+            dir_list.remove(0)
+            break
+    for j in range(0, p[1]):
+        if arr[p[0]][j] != 0:
+            dir_list.remove(1)
+            break
+    for i in range(p[0] + 1, N):
+        if arr[i][p[1]] != 0:
+            dir_list.remove(2)
+            break
+    for j in range(p[1] + 1, N):
+        if arr[p[0]][j] != 0:
+            dir_list.remove(3)
+            break
+    return dir_list
+
+def draw_line(arr, p, direction):
+    if direction == 0:  # up
+        for i in range(0, p[0]):
+            arr[i][p[1]] = 2
+    elif direction == 1:  # left
+        for i in range(0, p[1]):
+            arr[p[0]][i] = 2
+    elif direction == 2:  # down
+        for i in range(p[0] + 1, len(arr)):
+            arr[i][p[1]] = 2
+    elif direction == 3:  # right
+        for i in range(p[1] + 1, len(arr)):
+            arr[p[0]][i] = 2
+    elif direction == 4:  # not draw
+        arr[p[0]][p[1]] = 3
+    else:
+        print('wrong #dir')
+    return arr
+
+
+def wiring(arr, p_core, optimal_sol):
+    if not p_core:
+        cnt_L = 0
+        cnt_not = 0
+        for row in arr:
+            cnt_L += row.count(2)
+            cnt_not += row.count(3)
+
+        if cnt_not <= optimal_sol[1] and cnt_L <= optimal_sol[0]:
+            optimal_sol[1] = cnt_not
+            optimal_sol[0] = cnt_L
+        return
+
+    p = p_core.pop()
+    dir_list = check_dir(p, arr)
+
+    for direction in dir_list:
+        if direction == 4 and optimal_sol[1] == 0:
+            continue
+        p_core_tmp = p_core[:]
+        arr_tmp = [0 for _ in range(len(arr))]
+        for row_n in range(len(arr)):
+            arr_tmp[row_n] = arr[row_n][:]
+
+        next_arr = draw_line(arr_tmp, p, direction)
+        wiring(next_arr, p_core_tmp, optimal_sol)
+
+    return
+
+
+for tc in range(1, 1+int(input())):
+    N = int(input())
+    arr = [0 for _ in range(N)] # 0: Cell / 1: Core / 2: Line / 3: Not-connected Core
+    p_core = []
+
+    for i in range(N):
+        arr[i] = [int(row) for row in input().split()]
+        for j in range(N):
+            if (arr[i][j]==1) and (i!=0) and (j!=0) and (i!=N-1) and (j!=N-1):
+                p_core.append((i,j))
+
+    L_list = []
+    optimal_sol = [500, 500]
+    wiring(arr, p_core, optimal_sol)
+
+    print('#{} {}'.format(tc, optimal_sol[0]))
