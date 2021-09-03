@@ -1,0 +1,161 @@
+'''
+====== 모두의 알고리즘 with 파이썬 ======
+start_date: 2021.09.03.
+
+'''
+
+# 01_1: 1부터 n까지의 합 구하기
+def sum_n_1(n):
+    s = 0
+    for i in range(1, n+1):
+        s = s + i
+    return s
+
+def sum_n_2(n):
+    return n*(n+1) // 2
+
+def sum_n_square_1(n):
+    s = 0
+    for i in range(1, n+1):
+        s = s + i**2
+    return s
+
+def sum_n_square_2(n):
+    return n*(n+1)*(2*n+1) // 6
+
+# 01_2: 최댓값 찾기
+'''
+자주 쓰는 리스트 기능
+len(a)
+append(x)
+insert(i, x)
+pop(i)
+clear()
+x in a
+'''
+def find_max(a):
+    n = len(a)
+    max_v = a[0]
+    for i in range(1, n):
+        if a[i] > max_v:
+            max_v = a[i]
+    return max_v
+
+def find_max_idx(a):
+    n = len(a)
+    max_idx = 0
+    for i in range(1, n):
+        if a[i] > a[max_idx]:
+            max_idx = i
+    return max_idx
+
+def find_min_from_inputs():
+    n = int(input('Size of list(number) : '))
+    a = [int(input(f'Number {i+1} : ')) for i in range(n)]
+    print(f'Input Data : {a}')
+    min_v = a[0]
+    for i in range(1, n):
+        if a[i] < min_v:
+            min_v = a[i]
+    # print(f'minimum value : {min_v}')
+    return min_v
+
+# 01_3: 동명이인 찾기_1
+'''
+자주 쓰는 집합 기능
+len(s)
+add(x)
+discard(x)
+clear()
+x in s
+'''
+def find_same_name(a):
+    n = len(a)
+    result = set()
+    for i in range(0, n-1):
+        for j in range(i+1, n):
+            if a[i] == a[j]:
+                result.add(a[i])
+    return result
+
+def print_n_C_2(a):
+    n = len(a)
+    for i in range(n-1):
+        for j in range(i+1, n):
+            print(f'{a[i]} - {a[j]}')
+    return
+
+# 01_4: 팩토리얼 구하기
+def fact_1(n):
+    f = 1
+    for i in range(1, n+1):
+        f = f * i
+    return f
+
+def fact_2(n):
+    if n <= 1:
+        return 1
+    return n * fact_2(n-1)
+'''
+재귀호출의 일반적인 형태
+def function(input):
+    if 입력 값이 충분히 작으면: # 종료조건
+        return 결과값
+    ...
+    function(더 작은 입력 값)
+    ...
+    return 결과값
+'''
+def sum_n_recursion(n):
+    if n == 1:
+        return 1
+    return n + sum_n_recursion(n-1)
+
+def find_max_recursion(a):
+    if len(a) == 1:
+        return a[0]
+
+    max_v = find_max_recursion(a[:-1])
+    if a[-1] > max_v:
+        max_v = a[-1]
+    return  max_v
+
+# 01_5: 최대공약수 구하기
+def gcd(a, b):
+    i = min(a, b)
+    while True:
+        if a % i == 0 and b % i == 0:
+            return i
+        i = i - 1
+
+def gcd_Euclid(a, b):
+    if b == 0:
+        return a
+    return gcd_Euclid(b, a % b)
+'''
+재귀 호출의 이해를 돕는 방법
+def gcd(a, b):
+    print("gcd: ", a, b) # 함수 호출을 표시
+    if b == 0: # 종료 조건
+        return a
+    return gcd(b, a % b)
+'''
+def fibonacci(n):
+    if n <= 1:
+        return n # n=0 -> 0 \ n=1 -> 1
+    ''' 
+    위가 더 좋음
+    if n == 0:
+        return 0
+    elif n == 1:
+        return 1
+    '''
+    return fibonacci(n-1) + fibonacci(n-2)
+
+def main():
+    for i in range(1, 100):
+        print(fibonacci(i))
+    return
+
+if __name__ == '__main__':
+    main()
